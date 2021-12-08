@@ -1,12 +1,12 @@
-name: Deploy master & test builds
+name: Deploy main tag & test it
 
 on:
   push:
-    branches: [master, ci]
+    branches: [main, ci]
 
 jobs:
   deploy:
-    name: Deploy master tag image
+    name: Deploy main tag image
     runs-on: ubuntu-latest
     if: "!contains(github.event.head_commit.message, 'ci-skip') && !contains(github.event.head_commit.message, 'skip-ci')"
     steps:
@@ -23,10 +23,23 @@ jobs:
         run: docker push ghcr.io/microbit-foundation/daplink:main
 
   build-daplink:
-    name: Test build of DAPLink develop branch
+    name: Build ${{ matrix.project }} ${{ matrix.build-system }} DAPLink, develop branch
     needs: deploy
     runs-on: ubuntu-latest
     container: ghcr.io/microbit-foundation/daplink:main
+    strategy:
+      fail-fast: false
+      matrix:
+        project:
+          - kl26z_bl
+          - kl26z_microbit_if
+          - kl27z_microbit_bl
+          - kl27z_microbit_if
+          - nrf52820_microbit_bl
+          - nrf52820_microbit_if
+        build-system:
+          - make_gcc_arm
+          - cmake_gcc_arm -g ninja
     steps:
       - name: Check Versions
         run: |
@@ -40,5 +53,6 @@ jobs:
           git clone https://github.com/mbedmicro/DAPLink
           cd DAPLink
           git checkout -b develop origin/develop
-      - name: Build DAPLink for kl27z_microbit_if
-        run: python tools/progen_compile.py -t make_gcc_arm kl27z_microbit_if
+      - name: Build DAPLink for ${{ matrix.project }}
+        working-directory: DAPLink
+        run: python tools/progen_compile.py -t ${{ matrix.build-system }} ${{ matrix.project }}
