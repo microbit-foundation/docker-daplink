@@ -1,12 +1,9 @@
 FROM ubuntu:focal
 
-LABEL maintainer="Carlos Pereira Atencio <carlosperate@embeddedlog.com>"
-LABEL Description="Image with the micro:bit toolchain"
-
-# Installing build tools, git, python3 and setting it as the default python
+# Installing make, git, python3 and setting it as the default python
 ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update -qq && \
-    apt-get install -y --no-install-recommends wget git build-essential srecord && \
+    apt-get install -y --no-install-recommends wget git make && \
     apt-get install -y --no-install-recommends python3 python3-pip && \
     update-alternatives --install /usr/bin/python python /usr/bin/python3 1 && \
     apt-get autoremove -y && apt-get clean -y && rm -rf /var/lib/apt/lists/*
@@ -22,10 +19,10 @@ RUN cd /opt/ && \
     rm gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
 ENV PATH $PATH:/opt/gcc-arm-none-eabi-10-2020-q4-major/bin
 
-# Installing Yotta, Cmake, and Ninja
+# Installing DAPLink Python dependencies, CMake, and Ninja
 COPY requirements.txt /home/
-RUN python3 -m pip --no-cache-dir install --upgrade pip && \
-    python3 -m pip --no-cache-dir install -r /home/requirements.txt && \
+RUN python3 -m pip --no-cache-dir install -r /home/requirements.txt && \
+    python3 -m pip --no-cache-dir install cmake==3.22.0 ninja==1.10.2.3  && \
     rm /home/requirements.txt
 
 WORKDIR /home/
