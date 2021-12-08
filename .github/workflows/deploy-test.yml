@@ -15,97 +15,30 @@ jobs:
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
-          username: ${{ github.repository_owner }}
-          password: ${{ secrets.CR_PAT }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Build image
-        run: docker build -t ghcr.io/${{ github.repository_owner }}/microbit-toolchain:master .
-      - name: Push master tag to ghcr.io
-        run: docker push ghcr.io/${{ github.repository_owner }}/microbit-toolchain:master
+        run: docker build -t ghcr.io/microbit-foundation/daplink:main .
+      - name: Push tag to ghcr.io
+        run: docker push ghcr.io/microbit-foundation/daplink:main
 
-  build-uPy-v1:
-    name: MicroPython V1 test build with master tag image
+  build-daplink:
+    name: Test build of DAPLink develop branch
     needs: deploy
     runs-on: ubuntu-latest
-    container: ghcr.io/carlosperate/microbit-toolchain:master
+    container: ghcr.io/microbit-foundation/daplink:main
     steps:
       - name: Check Versions
         run: |
           arm-none-eabi-gcc --version
           cmake --version
           ninja --version
-          yotta --version
-          srec_cat --version
-      - name: Clone MicroPython
-        run: git clone https://github.com/bbcmicrobit/micropython.git
-      - name: Build MicroPython
+          python --version
+          pip list
+      - name: Clone DAPLink and checkout develop branch
         run: |
-          cd micropython
-          yt target bbc-microbit-classic-gcc-nosd@https://github.com/lancaster-university/yotta-target-bbc-microbit-classic-gcc-nosd
-          yt up
-          make all
-
-  build-dal:
-    name: DAL test build with master tag image
-    needs: deploy
-    runs-on: ubuntu-latest
-    container: ghcr.io/carlosperate/microbit-toolchain:master
-    steps:
-      - name: Check Versions
-        run: |
-          arm-none-eabi-gcc --version
-          cmake --version
-          ninja --version
-          yotta --version
-          srec_cat --version
-      - name: Clone microbit-samples
-        run: git clone https://github.com/lancaster-university/microbit-samples.git
-      - name: Build DAL samples
-        run: |
-          cd microbit-samples
-          yt build
-
-  build-uPy-v2:
-    name: MicroPython V2 test build with master tag image
-    needs: deploy
-    runs-on: ubuntu-latest
-    container: ghcr.io/carlosperate/microbit-toolchain:master
-    steps:
-      - name: Check Versions
-        run: |
-          arm-none-eabi-gcc --version
-          cmake --version
-          ninja --version
-          yotta --version
-          srec_cat --version
-      - name: Clone MicroPython
-        run: |
-          git clone https://github.com/microbit-foundation/micropython-microbit-v2.git
-          cd micropython-microbit-v2
-          git submodule update --init
-          cd ..
-      - name: Build MicroPython
-        run: |
-          cd micropython-microbit-v2
-          make -C lib/micropython/mpy-cross PYTHON=python3
-          cd src
-          make
-
-  build-codal:
-    name: CODAL test build with master tag image
-    needs: deploy
-    runs-on: ubuntu-latest
-    container: ghcr.io/carlosperate/microbit-toolchain:master
-    steps:
-      - name: Check Versions
-        run: |
-          arm-none-eabi-gcc --version
-          cmake --version
-          ninja --version
-          yotta --version
-          srec_cat --version
-      - name: Clone microbit-v2-samples
-        run: git clone https://github.com/lancaster-university/microbit-v2-samples.git
-      - name: Build CODAL samples
-        run: |
-          cd microbit-v2-samples
-          python build.py
+          git clone https://github.com/mbedmicro/DAPLink
+          cd DAPLink
+          git checkout -b develop origin/develop
+      - name: Build DAPLink for kl27z_microbit_if
+        run: python tools/progen_compile.py -t make_gcc_arm kl27z_microbit_if
