@@ -1,4 +1,4 @@
-# DAPLink Docker Image
+# DAPLink Toolchain Docker Image
 
 🐳 A Docker image to create repeatable
 [DAPLink](https://github.com/ARMmbed/DAPLink) builds.
@@ -9,7 +9,7 @@
 (Optional) You can first pull the image version you want to use:
 
 ```
-docker pull ghcr.io/microbit-foundation/daplink:2021.12.1
+docker pull ghcr.io/microbit-foundation/daplink:2022.01.1
 ```
 
 Clone and navigate to the desire branch of the DAPLink project:
@@ -43,6 +43,7 @@ docker build -t "daplink-toolchain" .
 docker run --name daplink-toolchain-container -it --entrypoint /bin/bash daplink-toolchain
 ```
 
+
 ## DAPLink Python dependencies used
 
 These Docker images contain the DAPLink Python dependencies pre-installed as
@@ -65,9 +66,9 @@ These images use a [CalVer](https://calver.org/) variant: YYYY.MM.MINOR
 This project is under the MIT open source license. It was forked from
 [carlosperate/docker-microbit-toolchain](https://github.com/carlosperate/docker-microbit-toolchain)
 at commit
-[2637ab7570fe77c352189249a865b3241b880d67](https://github.com/carlosperate/docker-microbit-toolchain/commit/2637ab7570fe77c352189249a865b3241b880d67).
+[2637ab7570fe77c352189249a865b3241b880d67](https://github.com/carlosperate/docker-microbit-toolchain/tree/2637ab7570fe77c352189249a865b3241b880d67).
 
-[SPDX-License-Identifier: MIT](LICENSE.md)
+[SPDX-License-Identifier: MIT](LICENSE)
 
 
 ## Code of Conduct
