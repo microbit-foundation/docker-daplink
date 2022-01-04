@@ -11,13 +11,13 @@ RUN apt-get update -qq && \
 # Installing Arm GCC
 WORKDIR /opt/
 RUN cd /opt/ && \
-    wget -q https://developer.arm.com/-/media/Files/downloads/gnu-rm/10-2020q4/gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2 && \
-    echo "8312c4c91799885f222f663fc81f9a31  gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2" >> MD5SUM && \
+    wget -q https://developer.arm.com/-/media/Files/downloads/gnu-rm/10.3-2021.07/gcc-arm-none-eabi-10.3-2021.07-x86_64-linux.tar.bz2 && \
+    echo "b56ae639d9183c340f065ae114a30202  gcc-arm-none-eabi-10.3-2021.07-x86_64-linux.tar.bz2" >> MD5SUM && \
     md5sum -c MD5SUM && \
     rm MD5SUM && \
-    tar -xf gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2 && \
-    rm gcc-arm-none-eabi-10-2020-q4-major-x86_64-linux.tar.bz2
-ENV PATH $PATH:/opt/gcc-arm-none-eabi-10-2020-q4-major/bin
+    tar -xf gcc-arm-none-eabi-10.3-2021.07-x86_64-linux.tar.bz2 && \
+    rm gcc-arm-none-eabi-10.3-2021.07-x86_64-linux.tar.bz2
+ENV PATH $PATH:/opt/gcc-arm-none-eabi-10.3-2021.07/bin
 
 # Installing DAPLink Python dependencies, CMake, and Ninja
 COPY requirements.txt /home/
