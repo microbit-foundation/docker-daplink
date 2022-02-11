@@ -12,7 +12,7 @@
 docker pull ghcr.io/microbit-foundation/daplink:2022.01.1
 ```
 
-Clone and navigate to the desire branch of the DAPLink project:
+Clone and navigate to the desired branch of the DAPLink project:
 
 ```
 git clone https://github.com/mbedmicro/DAPLink
@@ -26,10 +26,20 @@ cd DAPLink
 git checkout -b develop origin/develop
 ```
 
-Build the required DAPLink project, for example for the `kl27z_microbit_if`:
+Build the required DAPLink project, for micro:bit V2.0:
 
 ```
-docker run -v $(pwd):/home --rm ghcr.io/microbit-foundation/daplink:2021.12.1 python tools/progen_compile.py -t make_gcc_arm kl27z_microbit_if
+docker run -v $(pwd):/home --rm ghcr.io/microbit-foundation/daplink:2022.01.1 python tools/progen_compile.py -t make_gcc_arm kl27z_microbit_if
+```
+
+micro:bit V2.2:
+```
+docker run -v $(pwd):/home --rm ghcr.io/microbit-foundation/daplink:2022.01.1 python tools/progen_compile.py -t make_gcc_arm nrf52820_microbit_if
+```
+
+micro:bit V1:
+```
+docker run -v $(pwd):/home --rm ghcr.io/microbit-foundation/daplink:2022.01.1 python tools/progen_compile.py -t make_gcc_arm kl26z_microbit_if
 ```
 
 
